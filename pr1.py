@@ -93,3 +93,7 @@ df = pd.read_csv('data.csv')
 x = df["Calories"].mode()[0]
 
 df["Calories"].fillna(x, inplace = True)
+#=========================================================================
+
+#Set "Duration" = 45 in row 7:
+df.loc[7, 'Duration'] = 45
