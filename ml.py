@@ -69,3 +69,110 @@ y_pred= regressor.predict(x_test)
 print('Train Score: ', regressor.score(x_train, y_train))  
 print('Test Score: ', regressor.score(x_test, y_test))
 
+#5.Polynomial Regression(position,level,salary)
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+dataset = pd.read_csv('Position_Salaries.csv')
+X = dataset.iloc[:, 1:-1].values
+y = dataset.iloc[:, -1].values
+dataset
+
+from sklearn.linear_model import LinearRegression
+lin_reg = LinearRegression()
+lin_reg.fit(X, y)   
+
+//Polynomial Regression model
+from sklearn.preprocessing import PolynomialFeatures
+poly_reg = PolynomialFeatures(degree = 4)
+X_poly = poly_reg.fit_transform(X)
+lin_reg_2 = LinearRegression()
+lin_reg_2.fit(X_poly, y)
+
+//Visualising Linear regression
+plt.scatter(X, y, color = 'red')
+plt.plot(X, lin_reg.predict(X), color = 'blue')
+plt.title('Truth or Bluff (Linear Regression)')
+plt.xlabel('Position Level')
+plt.ylabel('Salary')
+plt.show()
+
+//Visualising Polynominal regression
+plt.scatter(X, y, color = 'red')
+plt.plot(X, lin_reg_2.predict(poly_reg.fit_transform(X)), color = 'blue')
+plt.title('Truth or Bluff (Polynomial Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
+
+//Visualising polynominal regression (high smooth)
+X_grid = np.arange(min(X), max(X), 0.1)
+X_grid = X_grid.reshape((len(X_grid), 1))
+plt.scatter(X, y, color = 'red')
+plt.plot(X_grid, lin_reg_2.predict(poly_reg.fit_transform(X_grid)), color = 'blue')
+plt.title('Truth or Bluff (Polynomial Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
+
+//predict new result
+lin_reg.predict([[6.5]])
+lin_reg_2.predict(poly_reg.fit_transform([[6.5]]))
+                                                   
+#8.Decision Tree Regression
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+dataset = pd.read_csv('Position_Salaries.csv')
+X = dataset.iloc[:, 1:-1].values
+y = dataset.iloc[:, -1].values
+
+//Training the Decision tree regression model on the whole dataset
+from sklearn.tree import DecisionTreeRegressor
+regressor = DecisionTreeRegressor(random_state = 0)
+regressor.fit(X, y)
+
+//predicting a new result
+regressor.predict([[6.5]])
+
+//visualising the decision tree regression results(higher resolution)
+X_grid = np.arange(min(X), max(X), 0.01)
+X_grid = X_grid.reshape((len(X_grid), 1))
+plt.scatter(X, y, color = 'red')
+plt.plot(X_grid, regressor.predict(X_grid), color = 'blue')
+plt.title('Truth or Bluff (Decision Tree Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
+
+#9. Random Forest Regression
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+dataset = pd.read_csv('Position_Salaries.csv')
+X = dataset.iloc[:, 1:-1].values
+y = dataset.iloc[:, -1].values
+
+//Training the random forest regression model on the whole dataset
+from sklearn.ensemble import RandomForestRegressor
+regressor = RandomForestRegressor(n_estimators = 10, random_state = 0)
+regressor.fit(X, y)
+
+//predicting a new result
+regressor.predict([[6.5]])
+
+//visualising the random forest regression results
+X_grid = np.arange(min(X), max(X), 0.01)
+X_grid = X_grid.reshape((len(X_grid), 1))
+plt.scatter(X, y, color = 'red')
+plt.plot(X_grid, regressor.predict(X_grid), color = 'blue')
+plt.title('Truth or Bluff (Random Forest Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
