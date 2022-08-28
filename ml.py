@@ -439,4 +439,138 @@ mtp.xlabel('Age')
 mtp.ylabel('Estimated Salary')  
 mtp.legend()  
 mtp.show() 
+ 
                                                    
+###########################################################################################
+
+#K-Means Clustering
+import numpy as nm
+import matplotlib.pyplot as mtp
+import pandas as pd
+
+dataset = pd.read_csv("Mall_Customers.csv")
+x = dataset.iloc[:,[3,4]].values
+
+#finding optimal number of clusters using the elbow method  
+from sklearn.cluster import KMeans
+wcss_list=[]
+
+for i in range(1,11):
+    kmeans = KMeans(n_clusters=i, init='k-means++',random_state=42)
+    kmeans.fit(x)
+    wcss_list.append(kmeans.inertia_)
+
+mtp.plot(range(1,11),wcss_list)
+mtp.title('The Elbow Method Graph')
+mtp.xlabel('Number of clusters(k)')
+mtp.ylabel('wcss_list')
+mtp.show()
+
+#training the K-means model on a dataset  
+kmeans = KMeans(n_clusters=5,init='k-means++',random_state=42)
+y_predict = kmeans.fit_predict(x)
+
+#visualize
+mtp.scatter(x[y_predict == 0,0],
+            x[y_predict == 0,1],
+            s = 100,
+            c = 'blue',
+            label = 'Cluster 1')
+mtp.scatter(x[y_predict == 1,0],
+            x[y_predict == 1,1],
+            s = 100,
+            c = 'green',
+            label = 'Cluster 2')
+
+mtp.scatter(x[y_predict == 2,0],
+            x[y_predict == 2,1],
+            s = 100,
+            c = 'red',
+            label = 'Cluster 3')
+mtp.scatter(x[y_predict == 3,0],
+            x[y_predict == 3,1],
+            s = 100,
+            c = 'cyan',
+            label = 'Cluster 4')
+
+mtp.scatter(x[y_predict == 4,0],
+            x[y_predict == 4,1],
+            s = 100,
+            c = 'magenta',
+            label = 'Cluster 5')
+
+mtp.scatter(kmeans.cluster_centers_[:,0],
+            kmeans.cluster_centers_[:,1],
+            s = 300,
+            c = 'yellow',
+            label = 'Centroid')
+
+mtp.title('Clusters of customers')
+mtp.xlabel('Anual Income (k$)')
+mtp.ylabel('Spending score (1-100)')
+mtp.legend()
+mtp.show()
+                                                   
+#Apriori Algo
+import numpy as nm
+import matplotlib.pyplot as mtp
+import pandas as pd
+
+dataset = pd.read_csv('Market_Basket_Optimisation.csv')
+transactions = []
+for i in range(0,7501):
+    transactions.append([str(dataset.values[i,j]) for j in range(0,20)])
+
+from apyori import apriori
+rules = apriori(transactions = transactions,
+                min_support = 0.003,
+                min_confidence = 0.2,
+                min_lift = 3,
+                min_length = 2,
+                max_length = 2)
+
+results = list(rules)
+print(results)
+
+for item in results:
+    pair = item[0]
+    items = [x for x in pair]
+    print("Rule:" + items[0] + "->" + items[1])
+    
+    print("Support: " + str(item[1]))
+    print("Confidence:" + str(item[2][0][2]))
+    print("Lift:" + str(item[2][0][3]))
+    print("============================================================")
+                                                   
+#Agglomerative Hierarchy Clustering
+import numpy as nm
+import matplotlib.pyplot as mtp
+import pandas as pd
+
+dataset = pd.read_csv('Mall_Customers.csv')
+x = dataset.iloc[:,[3,4]].values
+
+#Finding the optimal number of clusters using the dendrogram 
+import scipy.cluster.hierarchy as shc
+dendro = shc.dendrogram(shc.linkage(x,method='ward'))
+mtp.title('Dendrogram Plot')
+mtp.ylabel('Euclidean Distances')
+mtp.xlabel('Customers')
+mtp.show()
+
+#training the hierarchical model on dataset  
+from sklearn.cluster import AgglomerativeClustering
+hc = AgglomerativeClustering(n_clusters = 5,affinity='euclidean',linkage='ward')
+y_pred=hc.fit_predict(x)
+
+#visualiza cluster
+mtp.scatter(x[y_pred == 0, 0], x[y_pred == 0, 1], s = 100, c = 'blue', label = 'Cluster 1')  
+mtp.scatter(x[y_pred == 1, 0], x[y_pred == 1, 1], s = 100, c = 'green', label = 'Cluster 2')  
+mtp.scatter(x[y_pred== 2, 0], x[y_pred == 2, 1], s = 100, c = 'red', label = 'Cluster 3')  
+mtp.scatter(x[y_pred == 3, 0], x[y_pred == 3, 1], s = 100, c = 'cyan', label = 'Cluster 4')  
+mtp.scatter(x[y_pred == 4, 0], x[y_pred == 4, 1], s = 100, c = 'magenta', label = 'Cluster 5')  
+mtp.title('Clusters of customers')  
+mtp.xlabel('Annual Income (k$)')  
+mtp.ylabel('Spending Score (1-100)')  
+mtp.legend()  
+mtp.show()  
